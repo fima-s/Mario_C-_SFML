@@ -15,7 +15,7 @@ extern float offsetY;
 
 
 
-class Abstract //АБК для врагов/ блоков/ платформ
+class Abstract //Abstract base class for dynamic objects
 {
 public:
 
@@ -26,12 +26,12 @@ public:
 	bool alive;
 	std::string name;
 
-	//Параметры Текстуры
+	//Texture param
 	int texture_pos_x, texture_pos_y, texture_width, texture_height;
-	int count; // шаг анимации
-			   //////////////////////
+	int count; // animation step 
+			   
 
-			   // параметры объекта на карте
+			   // coordinates of object int game
 	int map_pos_x;
 	int map_pos_y;
 

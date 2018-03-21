@@ -36,8 +36,8 @@ public:
 	{
 
 		if (!onGround)
-			dy = dy + 0.005*time; //падаем с ускорением на землю
-								  // вниз это y > 0
+			dy = dy + 0.005*time; 
+
 		rect.top += dy*time;
 
 		onGround = false;
@@ -64,7 +64,7 @@ public:
 
 			currentFrame += 0.005*time;
 
-			if (currentFrame > count) // currentFrame > count+1 =)
+			if (currentFrame > count) 
 				currentFrame -= count;
 
 

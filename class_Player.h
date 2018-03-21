@@ -18,7 +18,7 @@ class Player
 {
 public:
 
-	float dx, dy; // компоненты скорости по осям
+	float dx, dy; // velocity components
 	sf::FloatRect rect;
 	bool onGround;
 	sf::Sprite sprite;
@@ -62,8 +62,8 @@ public:
 
 
 			if (!onGround)
-				dy = dy + 0.0005*time; //падаем с ускорением на землю
-									   // вниз это y > 0
+				dy = dy + 0.0005*time; // presence  gravity
+									   
 			rect.top += dy*time;
 
 			onGround = false;
@@ -76,11 +76,11 @@ public:
 
 			if (onGround)
 			{
-				if (dx > 0) //left
+				if (dx > 0) //right
 				{
 					sprite.setTextureRect(sf::IntRect(40 * int(currentFrame) + 8, 7, 16, 16));
 				}
-				if (dx < 0) //right
+				if (dx < 0) //left
 				{
 					sprite.setTextureRect(sf::IntRect(102 - 40 * int(currentFrame), 7, -16, 16));
 				}
@@ -92,20 +92,20 @@ public:
 			{
 				if (dy < 0 && dx > 0)
 				{
-					sprite.setTextureRect(sf::IntRect(125, 7, 25, 16));
+					sprite.setTextureRect(sf::IntRect(126, 6, 20, 17));
 				}
 				else if (dy < 0 && dx < 0)
 				{
-					sprite.setTextureRect(sf::IntRect(145, 7, -20, 16));
+					sprite.setTextureRect(sf::IntRect(144, 6, -18, 17));
 				}
 			}
 
-			sprite.setPosition(rect.left - offsetX, rect.top - offsetY); // выводим спрайт в 
-																		 // в эту позицию
+			sprite.setPosition(rect.left - offsetX, rect.top - offsetY); // position os sprite on map 
+																		 
 
 
 			dx = 0;
-		}//if (alive)
+		}
 		else if (alive == false)
 		{
 			dx = 0.0;
@@ -115,15 +115,13 @@ public:
 			rect.top += dy*time;
 
 			if (!onGround)
-				dy = dy + 0.00008*time; //падаем с ускорением на землю
-										// вниз это y > 0
+				dy = dy + 0.00008*time; 
 
 
 		}
 
 
-		sprite.setPosition(rect.left - offsetX, rect.top - offsetY); // выводим спрайт в 
-																	 // в эту позицию
+		sprite.setPosition(rect.left - offsetX, rect.top - offsetY); 
 
 	}
 
@@ -155,7 +153,7 @@ public:
 			{
 				if (TileMap[i][j] == 'T' || TileMap[i][j] == 'W' || TileMap[i][j] == 'G' || TileMap[i][j] == 'B' || TileMap[i][j] == 'Q')
 				{
-					if (dy > 0) //падение
+					if (dy > 0) 
 					{
 						rect.top = i * 16 - rect.height;
 						dy = 0;

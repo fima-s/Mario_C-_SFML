@@ -27,7 +27,7 @@ public:
 		dx = 0.05;
 	}
 
-	void update(float time) // грибы будут двигаться только по земле 
+	void update(float time) // Mushroom didnt interact with gravity
 	{
 
 		rect.left += dx*time;
@@ -39,7 +39,7 @@ public:
 
 
 
-		if (currentFrame > count) // currentFrame > count+1 =)
+		if (currentFrame > count)
 			currentFrame -= count;
 
 		sprite.setTextureRect(sf::IntRect(19 * int(currentFrame), 0, texture_width, texture_height));
@@ -51,8 +51,8 @@ public:
 		if (!alive)
 			sprite.setTextureRect(sf::IntRect(58, 0, 16, 16));
 
-		sprite.setPosition(rect.left - offsetX, rect.top - offsetY); // выводим спрайт в 															 
-																	 // в эту позицию
+		sprite.setPosition(rect.left - offsetX, rect.top - offsetY); 
+
 	}
 
 	void CollisionX()

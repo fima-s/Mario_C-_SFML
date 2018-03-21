@@ -28,8 +28,8 @@ int main()
 	sf::RenderWindow window(sf::VideoMode(640, 330), "Super_Mario");
 	
 	window.setFramerateLimit(60); 
-	// предел количества кадров, оптимизация, чтобы процессор не выдал по 50 % на ядро 
-	// можно 30, но плавность теряется
+	// limit of frames per sec 
+
 
 	sf::Texture t;
 	t.loadFromFile("mario_sprite_sheet.png");
@@ -44,7 +44,7 @@ int main()
 
 	float currentFrame = 0;
 
-	//------Звуки + музыка-------------------
+	//------Music-------------------
 	
 	sf::SoundBuffer jump_buffer;
 	jump_buffer.loadFromFile("jump-small.wav");
@@ -73,14 +73,14 @@ int main()
 	//-------------------------------------
 
 
-	/////////////////Генерация МИРА////////////////////
+	/////////////////World generation////////////////////
 
 	Player Super_mario(t);
 	
 	std::list<Abstract*> Dynamic_obj_list;
 
 
-	//////////////////////////////// Грибы //////////////////////////////////////////////////
+	//////////////////////////////// Enemies //////////////////////////////////////////////////
 	Dynamic_obj_list.push_back(new Enemy("Mushroom", 10 * 16, 18 * 16, map_set, 17, 0, 18, 16, 2));
 	Dynamic_obj_list.push_back(new Enemy("Mushroom", 15 * 16, 18 * 16, map_set, 17, 0, 18, 16, 2));
 	Dynamic_obj_list.push_back(new Enemy("Mushroom", 22 * 16, 18 * 16, map_set, 17, 0, 18, 16, 2));
@@ -98,7 +98,7 @@ int main()
 	Dynamic_obj_list.push_back(new Enemy("Mushroom", 190 * 16, 18 * 16, map_set, 17, 0, 18, 16, 2));
 
 
-	//////////////////////////////// Монетки //////////////////////////////////////////////////
+	//////////////////////////////// Coins //////////////////////////////////////////////////
 	Dynamic_obj_list.push_back(new Coin("Coin_classic", 13 * 16, 13 * 16, coins_tex, 147, 98, 9, 15, 4));
 	Dynamic_obj_list.push_back(new Coin("Coin_classic", 14 * 16, 13 * 16, coins_tex, 147, 98, 9, 15, 4));
 	Dynamic_obj_list.push_back(new Coin("Coin_classic", 15 * 16, 13 * 16, coins_tex, 147, 98, 9, 15, 4));
@@ -128,11 +128,11 @@ int main()
 	{
 		Dynamic_obj_list.push_back(new Coin("Coin_classic", (30 + i) * 16, 13 * 16, coins_tex, 147, 98, 9, 15, 4));
 	}
-	// Серия монеток с 30 позиции
+	
 
 
 
-	// Динамические монетки
+	// Jumping coins
 	Dynamic_obj_list.push_back(new Coin("Coin_rot", 12 * 16, 14 * 16, coins_tex, 4, 113, 15, 15, 2));
 	Dynamic_obj_list.push_back(new Q_Block("Q_block", 12 * 16, 14 * 16, map_set, 128, 112, 16, 15, 0));
 
@@ -170,10 +170,10 @@ int main()
 	Dynamic_obj_list.push_back(new Q_Block("Q_block", 185 * 16, 11 * 16, map_set, 128, 112, 16, 15, 0));
 
 
-	Dynamic_obj_list.push_back(new Coin("Coin", 9 * 16, 1 * 16, coins_tex, 147, 98, 9, 15, 4)); //монетка для очков
+	Dynamic_obj_list.push_back(new Coin("Coin", 9 * 16, 1 * 16, coins_tex, 147, 98, 9, 15, 4)); 
 
 
-	Dynamic_obj_list.push_back(new Flag("Flag", 228.5 * 16, 12.2 * 16, coins_tex, 128, 1, 16, 15, 0)); //флаг над замком
+	Dynamic_obj_list.push_back(new Flag("Flag", 228.5 * 16, 12.2 * 16, coins_tex, 128, 1, 16, 15, 0)); 
 
 
 	sf::Clock clock;
@@ -186,19 +186,18 @@ int main()
 	font.loadFromFile("prstart.ttf");
 	sf::Text text1("", font, 14);
 	sf::Text text2("", font, 14);
-	sf::Text text3("", font, 10); //текст для обозначения очков над головой Марио
+	sf::Text text3("", font, 10); //200 on Mario head
 
 	sf::Text coin_text1("", font, 13);
 	sf::Text coin_text2("", font, 13);
 	
 	int text3_tick = 1;
-	bool t3_begin = false;// Появлние 200 
+	bool t3_begin = false;// generation of "200"
 	
-	bool fell_down = false; // описывает ситуацию падает ли Марио, пока в голову лучше ничего не пришло
+	bool fell_down = false;  
 	bool game_over = false;
 
 
-	// ГЕНЕРАЦИЯ МИРА И ВСПОМОГАТЕЛЬНЫЙ ПАРАМТЕРОВ ОКОНЧЕНА ДАЛЕЕ ИДЕТ "РАБОТА В ОКНЕ"////////////////////////
 
 
 	
@@ -207,7 +206,7 @@ int main()
 		float time = clock.getElapsedTime().asMicroseconds();
 		clock.restart();
 
-		time = time / 700; //скорость игры, не зав от тактов
+		time = time / 700; // speed of game
 		
 		if (time > 20)
 			time = 20;
@@ -255,7 +254,7 @@ int main()
 
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up))
 		{
-			if (Super_mario.onGround && !fell_down && !game_over) //мы можем прыгнуть только на земле
+			if (Super_mario.onGround && !fell_down && !game_over) //can jump only on ground
 			{
 				Super_mario.dy = -0.3;
 				Super_mario.onGround = false; 
@@ -266,7 +265,6 @@ int main()
 
 		///////////////////////Update///////////////////////////
 		Super_mario.update(time);
-		//c1.update(time);
 		
 
 		for (auto x = Dynamic_obj_list.begin(); x != Dynamic_obj_list.end(); ++x)
@@ -309,15 +307,15 @@ int main()
 				{
 					if ((*it)->alive == true) 
 					{
-						if (Super_mario.dy < 0) //толкаем блок-вопросик снизу
+						if (Super_mario.dy < 0) // push Q block
 						{
-							(*it)->alive = false;// рнонводим блок-вопросик в кирпич
+							(*it)->alive = false;
 
-							// Отталкиваем Марио от блока
+							// Mario pushed from Q_block
 							Super_mario.rect.top = Super_mario.rect.top + 16;
 							Super_mario.dy = 0;
 							
-							//&&
+							
 							if (Super_mario.dx > 0)
 								Super_mario.rect.left = Super_mario.rect.left - Super_mario.rect.width;
 							if (Super_mario.dx < 0)
@@ -345,7 +343,7 @@ int main()
 
 
 						}
-						else // приземлились на платвоформу	
+						else
 						{
 							Super_mario.onGround = true;
 							Super_mario.rect.top = (*it)->rect.top - 16;
@@ -370,11 +368,11 @@ int main()
 
 							if (Super_mario.onGround)
 							{
-								if (Super_mario.dx > 0) //left
+								if (Super_mario.dx > 0) 
 								{
 									Super_mario.sprite.setTextureRect(sf::IntRect(40 * int(currentFrame) + 8, 7, 16, 16));
 								}
-								if (Super_mario.dx < 0) //right
+								if (Super_mario.dx < 0) 
 								{
 									Super_mario.sprite.setTextureRect(sf::IntRect(102 - 40 * int(currentFrame), 7, -16, 16));
 								}
@@ -389,7 +387,6 @@ int main()
 						if (Super_mario.dy < 0)
 						{
 							
-							//СТолкновение марио с платформой
 							Super_mario.rect.top = Super_mario.rect.top + 16;
 							Super_mario.dy = 0;
 							
@@ -400,20 +397,19 @@ int main()
 							
 							
 							
-							(*it)->dy = -0.1; // ящик отклоняется
+							(*it)->dy = -0.1; // box jumps
 
 
 
 
 						}
-						else // приземлились на платвоформу	// приземлились на платвоформу	
+						else // walking on platform
 						{
 							Super_mario.onGround = true;
 							Super_mario.rect.top = (*it)->rect.top - 16;
 						
 							Super_mario.dy = 0;
 			
-							//Анимания хождения по платвофрме
 							
 							if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
 							{
@@ -433,11 +429,11 @@ int main()
 
 							if (Super_mario.onGround)
 							{
-								if (Super_mario.dx > 0) //left
+								if (Super_mario.dx > 0) 
 								{
 									Super_mario.sprite.setTextureRect(sf::IntRect(40 * int(currentFrame) + 8, 7, 16, 16));
 								}
-								if (Super_mario.dx < 0) //right
+								if (Super_mario.dx < 0) 
 								{
 									Super_mario.sprite.setTextureRect(sf::IntRect(102 - 40 * int(currentFrame), 7, -16, 16));
 								}
@@ -492,7 +488,7 @@ int main()
 				Super_mario.alive = false;
 	
 			}
-			else if(!Super_mario.alive && !fell_down) //Марио укусил крип
+			else if(!Super_mario.alive && !fell_down) 
 			{
 				fell_down = true;
 
@@ -552,17 +548,17 @@ int main()
 
 		/////////////////MAP//////////////////////////////////////
 
-		window.clear(sf::Color(107, 140, 255)); //заливка фона
+		window.clear(sf::Color(107, 140, 255)); // blue background
 	
 		for (int i = 0; i < H; i++)
 		{
 			for (int j = 0; j < W; j++)
 			{
-				if (TileMap[i][j] == 'O')//Облако
+				if (TileMap[i][j] == 'O')//Cloud
 					map.setTextureRect(sf::IntRect(98, 224, 42, 25));
 				if (TileMap[i][j] == 'G')//Пол map.setTextureRect(sf::IntRect(208, 59, 42, 40));
 					map.setTextureRect(sf::IntRect(96, 112, 16, 16));
-				if (TileMap[i][j] == 'T')//Труба
+				if (TileMap[i][j] == 'T')//Tube
 				{	
 					if ((i == 16 && j == 27) || i == 16 && j == 38 
 					   ||  i == 16 && j == 56|| i == 17 && j == 174 || i == 17 && j == 196)
@@ -571,25 +567,25 @@ int main()
 						continue;
 				}
 				
-				if (TileMap[i][j] == 'K')//Куст тройной_большой
+				if (TileMap[i][j] == 'K')//Bush
 					map.setTextureRect(sf::IntRect(4, 106, 68, 20));
 				
-				if (TileMap[i][j] == 'B') //просто кирпич
+				if (TileMap[i][j] == 'B') // Block 
 					map.setTextureRect(sf::IntRect(144, 112, 16, 15));
 				
-				if(TileMap[i][j] == 'Q') // блок
+				if(TileMap[i][j] == 'Q') // Q_block
 					map.setTextureRect(sf::IntRect(112, 112, 15, 15));
 				
-				if (TileMap[i][j] == 'M')//Большая гора
+				if (TileMap[i][j] == 'M')//Big mountain
 					map.setTextureRect(sf::IntRect(146, 221, 75, 33));
 				
-				if (TileMap[i][j] == 'm')//Большая гора
+				if (TileMap[i][j] == 'm')// little mountain
 					map.setTextureRect(sf::IntRect(0, 140, 47, 20));
 				
-				if (TileMap[i][j] == 'k')//Малый куст, одинарный
+				if (TileMap[i][j] == 'k')//little bush
 					map.setTextureRect(sf::IntRect(50, 58, 41, 20));
 						
-				if (TileMap[i][j] == 'C')//Замок
+				if (TileMap[i][j] == 'C')//Castle
 					map.setTextureRect(sf::IntRect(95, 6, 107, 105));
 
 				
@@ -610,7 +606,7 @@ int main()
 
 
 
-		///////////////Отрисовка Динамических объектов////////////
+		///////////////drowing of dinamic object list////////////
 		for (auto x = Dynamic_obj_list.begin(); x != Dynamic_obj_list.end(); ++x)
 		{
 			if((*x)->name != "Flag" )
@@ -624,11 +620,11 @@ int main()
 
 
 
-		//////////////////////РАБОТА С ОТОБРАЖЕНИЕМ ТЕКСТА/////ИНОГДА НЕ СТАБИЛЬНА////////////////
+		//////////////////////Working wi text, sometime not stable ////////////////
 
 		std::ostringstream pointsString;
 		pointsString << Super_mario.points;
-		//pointsString << (Super_mario.rect.left/16);
+		//pointsString << (Super_mario.rect.left/16); // for texting, droing coordinates of Mario
 
 
 		std::stringstream coins;
@@ -644,7 +640,7 @@ int main()
 		coin_text2.setString("X " + coins.str());
 
 		text1.setPosition(1 * 16, 0*16);
-		text2.setPosition(2 * 16, 1 * 16); // Имя + очки
+		text2.setPosition(2 * 16, 1 * 16); // Name and points
 		text3.setPosition(Super_mario.rect.left - offsetX, Super_mario.rect.top-2*16);
 
 

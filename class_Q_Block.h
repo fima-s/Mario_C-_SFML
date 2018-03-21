@@ -32,8 +32,8 @@ public:
 	{
 
 		if (!onGround)
-			dy = dy + 0.001*time; //падаем с ускорением на землю
-								  // вниз это y > 0
+			dy = dy + 0.001*time; 
+
 		rect.top += dy*time;
 
 		onGround = false;
@@ -50,7 +50,7 @@ public:
 
 		if (!alive)
 			sprite.setTextureRect(sf::IntRect(sf::IntRect(144, 112, 16, 15)));
-		//sprite.setTextureRect(sf::IntRect(112, 112, 16, 16));
+		// or sprite.setTextureRect(sf::IntRect(112, 112, 16, 16));
 
 
 
@@ -59,8 +59,8 @@ public:
 
 
 
-		sprite.setPosition(rect.left - offsetX, rect.top - offsetY); // выводим спрайт в 															 
-																	 // в эту позицию
+		sprite.setPosition(rect.left - offsetX, rect.top - offsetY); 
+
 	}
 
 	~Q_Block() {};
