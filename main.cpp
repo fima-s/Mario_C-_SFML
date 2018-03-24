@@ -19,9 +19,20 @@
 
 float offsetX = 0;
 float offsetY = 0;
-
+//
+//extern sf::Font font;
+//extern sf::Text text1;
+//extern sf::Text text2;
+//extern sf::Text text3;
+//
+//extern sf::Text coin_text1;
+//extern sf::Text coin_text2;
+//
 
 void _world_generation(std::list<Abstract*> & Dynamic_obj_list, sf::Texture & map_set, sf::Texture & coins_tex);
+
+void _map_drowing(sf::String * TileMap, const int H, const int W, sf::Sprite map, sf::RenderWindow & window);
+
 
 
 
@@ -30,9 +41,26 @@ int main()
 {
 
 	sf::RenderWindow window(sf::VideoMode(640, 330), "Super_Mario");
-	
+	//invoke a window 
+
+
 	window.setFramerateLimit(60); 
 	// limit of frames per sec 
+
+	//////////GAME_VARIABLES //////////////////////////
+	float currentFrame = 0;
+
+	int text3_tick = 1; //var for gen "200" over Mario`s head 
+	bool t3_begin = false;// generation of "200"
+
+	bool fell_down = false;
+	bool game_over = false;
+
+
+
+
+
+
 
 
 	sf::Texture t;
@@ -45,8 +73,6 @@ int main()
 	sf::Texture coins_tex;
 	coins_tex.loadFromFile("Coins.png");
 	sf::Sprite coins_sprite(coins_tex);
-
-	float currentFrame = 0;
 
 	//------Music-------------------
 	
@@ -93,6 +119,8 @@ int main()
 
 	sf::RectangleShape rectangle(sf::Vector2f(16, 16));
 
+	
+
 	sf::Font font;
 	font.loadFromFile("prstart.ttf");
 	sf::Text text1("", font, 14);
@@ -101,13 +129,6 @@ int main()
 
 	sf::Text coin_text1("", font, 13);
 	sf::Text coin_text2("", font, 13);
-	
-	int text3_tick = 1;
-	bool t3_begin = false;// generation of "200"
-	
-	bool fell_down = false;  
-	bool game_over = false;
-
 
 
 
@@ -130,6 +151,7 @@ int main()
 			if (event.type == sf::Event::Closed)
 				window.close();
 
+			//CHeck live or "dead"
 			for (auto it = Dynamic_obj_list.begin(); it != Dynamic_obj_list.end();)
 			{
 				if ((*it)->alive == false && (*it)->name != "Q_block")
@@ -461,60 +483,8 @@ int main()
 
 		window.clear(sf::Color(107, 140, 255)); // blue background
 	
-		for (int i = 0; i < H; i++)
-		{
-			for (int j = 0; j < W; j++)
-			{
-				if (TileMap[i][j] == 'O')//Cloud
-					map.setTextureRect(sf::IntRect(98, 224, 42, 25));
-				if (TileMap[i][j] == 'G')//Пол map.setTextureRect(sf::IntRect(208, 59, 42, 40));
-					map.setTextureRect(sf::IntRect(96, 112, 16, 16));
-				if (TileMap[i][j] == 'T')//Tube
-				{	
-					if ((i == 16 && j == 27) || i == 16 && j == 38 
-					   ||  i == 16 && j == 56|| i == 17 && j == 174 || i == 17 && j == 196)
-						map.setTextureRect(sf::IntRect(0, 48, 32, 49));
-					else
-						continue;
-				}
-				
-				if (TileMap[i][j] == 'K')//Bush
-					map.setTextureRect(sf::IntRect(4, 106, 68, 20));
-				
-				if (TileMap[i][j] == 'B') // Block 
-					map.setTextureRect(sf::IntRect(144, 112, 16, 15));
-				
-				if(TileMap[i][j] == 'Q') // Q_block
-					map.setTextureRect(sf::IntRect(112, 112, 15, 15));
-				
-				if (TileMap[i][j] == 'M')//Big mountain
-					map.setTextureRect(sf::IntRect(146, 221, 75, 33));
-				
-				if (TileMap[i][j] == 'm')// little mountain
-					map.setTextureRect(sf::IntRect(0, 140, 47, 20));
-				
-				if (TileMap[i][j] == 'k')//little bush
-					map.setTextureRect(sf::IntRect(50, 58, 41, 20));
-						
-				if (TileMap[i][j] == 'C')//Castle
-					map.setTextureRect(sf::IntRect(95, 6, 107, 105));
 
-				
-				
-
-				if (TileMap[i][j] == 'W')
-					continue;
-
-				if (TileMap[i][j] == ' ')
-					continue;
-				
-				map.setPosition(j*16 - offsetX, i*16);
-				window.draw(map);
-
-
-			}
-		}
-
+		_map_drowing(TileMap, H, W, map,window);
 
 
 		///////////////drowing of dinamic object list////////////
@@ -529,13 +499,11 @@ int main()
 		window.draw(Super_mario.sprite);
 
 
-
-
-		//////////////////////Working with text, sometime not stable ////////////////
+		//////////////////////Working with text ////////////////
 
 		std::ostringstream pointsString;
 		pointsString << Super_mario.points;
-		//pointsString << (Super_mario.rect.left/16); // for texting, drowing coordinates of Mario
+		//pointsString << (Super_mario.rect.left/16); // for testing, drowing coordinates of Mario
 
 
 		std::stringstream coins;
