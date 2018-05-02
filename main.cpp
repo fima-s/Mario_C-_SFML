@@ -19,15 +19,8 @@
 
 float offsetX = 0;
 float offsetY = 0;
-//
-//extern sf::Font font;
-//extern sf::Text text1;
-//extern sf::Text text2;
-//extern sf::Text text3;
-//
-//extern sf::Text coin_text1;
-//extern sf::Text coin_text2;
-//
+
+
 
 void _world_generation(std::list<Abstract*> & Dynamic_obj_list, sf::Texture & map_set, sf::Texture & coins_tex);
 
@@ -44,7 +37,7 @@ int main()
 	//invoke a window 
 
 
-	window.setFramerateLimit(60); 
+	window.setFramerateLimit(120); 
 	// limit of frames per sec 
 
 	//////////GAME_VARIABLES //////////////////////////
@@ -151,7 +144,7 @@ int main()
 			if (event.type == sf::Event::Closed)
 				window.close();
 
-			//CHeck live or "dead"
+			//CHeck alive or "dead"
 			for (auto it = Dynamic_obj_list.begin(); it != Dynamic_obj_list.end();)
 			{
 				if ((*it)->alive == false && (*it)->name != "Q_block")
@@ -467,7 +460,7 @@ int main()
 			}
 				
 
-			if (game_over_counter > 500)
+			if (game_over_counter > 650)
 				window.close();
 		}
 
@@ -543,8 +536,14 @@ int main()
 
 	
 		window.display();
-	
+
 	} // while (window.isOpen())
+
+
+	// 
+	for (auto x = Dynamic_obj_list.begin(); x != Dynamic_obj_list.end(); ++x)
+		delete *x;
+
 
 
 	return 0;
